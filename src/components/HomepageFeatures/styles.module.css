@@ -9,3 +9,9 @@
   height: 200px;
   width: 200px;
 }
+
+.featureLink {
+  color: inherit;
+  text-decoration: bold;
+  margin-right: 1rem;
+}

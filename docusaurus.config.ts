@@ -7,7 +7,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 const config: Config = {
   title: "My Site",
   tagline: "Dinosaurs are cool",
-  favicon: "img/favicon.ico",
+  favicon: "img/favicon-ivaconsulta.png",
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -104,10 +104,10 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: "My Site",
+      title: "Home",
       logo: {
         alt: "My Site Logo",
-        src: "img/logo.svg",
+        src: "img/logo-ivaconsulta.png",
       },
       items: [
         {
@@ -128,10 +128,10 @@ const config: Config = {
         {
           type: "docSidebar",
           sidebarId: "tutorialSidebar",
-          position: "left",
+          position: "right",
           label: "Tutorial",
         },
-        { to: "/blog", label: "Blog", position: "left" },
+        { to: "/blog", label: "Blog", position: "right" },
         {
           href: "https://github.com/facebook/docusaurus",
           label: "GitHub",
