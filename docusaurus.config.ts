@@ -67,6 +67,17 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'wordpress',
+        path: 'wordpress-site',
+        routeBasePath: 'wordpress-site',
+        sidebarPath: false,
+      },
+    ],
+  ],
 
   themeConfig: {
     // Replace with your project's social card
@@ -81,6 +92,11 @@ const config: Config = {
         src: 'img/logo.svg',
       },
       items: [
+        {
+          to: '/wordpress-site/intro',
+          label: 'WordPress Site',
+          position: 'left',
+        },
         {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
