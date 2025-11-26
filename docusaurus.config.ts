@@ -80,6 +80,15 @@ const config: Config = {
     [
       "@docusaurus/plugin-content-docs",
       {
+        id: "orchestrator",
+        path: "orchestrator",
+        routeBasePath: "orchestrator",
+        sidebarPath: false,
+      },
+    ],
+    [
+      "@docusaurus/plugin-content-docs",
+      {
         id: "ragtool",
         path: "ragtool",
         routeBasePath: "ragtool",
@@ -104,6 +113,11 @@ const config: Config = {
         {
           to: "/wordpress-site/intro",
           label: "WordPress Site",
+          position: "left",
+        },
+        {
+          to: "/orchestrator/intro",
+          label: "Orchestrator",
           position: "left",
         },
         {
