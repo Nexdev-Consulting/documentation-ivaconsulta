@@ -99,7 +99,7 @@ The project is configured to run at `http://local.ivaconsulta`. Configure MAMP a
 Create a MySQL user with the following credentials:
 
 ```sql
-CREATE USER 'wordpress'@'localhost' IDENTIFIED BY '*HYdWp@IO5hC';
+CREATE USER 'wordpress'@'localhost' IDENTIFIED BY '<REDACTED_DB_PASSWORD>';
 GRANT ALL PRIVILEGES ON ivaconsulta.* TO 'wordpress'@'localhost';
 FLUSH PRIVILEGES;
 ```
@@ -108,7 +108,7 @@ FLUSH PRIVILEGES;
 
 - **Database Name**: `ivaconsulta`
 - **Username**: `wordpress`
-- **Password**: `*HYdWp@IO5hC`
+- **Password**: `<REDACTED_DB_PASSWORD>`
 - **Host**: `localhost:3307` (MAMP default MySQL port)
 - **Table Prefix**: `base001_`
 
@@ -126,7 +126,7 @@ FLUSH PRIVILEGES;
 
    ```bash
    # Using MAMP MySQL
-   /Applications/MAMP/Library/bin/mysql -u wordpress -p'*HYdWp@IO5hC' ivaconsulta < backup.sql
+   /Applications/MAMP/Library/bin/mysql -u wordpress -p'<REDACTED_DB_PASSWORD>' ivaconsulta < backup.sql
    ```
 
 4. **Set File Permissions**:
@@ -274,7 +274,7 @@ define('DB_HOST', 'localhost:3306');
 Create a MySQL user with the following credentials:
 
 ```sql
-CREATE USER 'wordpress'@'localhost' IDENTIFIED BY '*HYdWp@IO5hC';
+CREATE USER 'wordpress'@'localhost' IDENTIFIED BY '<REDACTED_DB_PASSWORD>';
 GRANT ALL PRIVILEGES ON ivaconsulta.* TO 'wordpress'@'localhost';
 FLUSH PRIVILEGES;
 ```
@@ -283,7 +283,7 @@ FLUSH PRIVILEGES;
 
 - **Database Name**: `ivaconsulta`
 - **Username**: `wordpress`
-- **Password**: `*HYdWp@IO5hC`
+- **Password**: `<REDACTED_DB_PASSWORD>`
 - **Host**: `localhost:3306` (XAMPP default MySQL port) or `localhost` (if using default port)
 - **Table Prefix**: `base001_`
 
@@ -306,7 +306,7 @@ FLUSH PRIVILEGES;
 
    ```bash
    # Using XAMPP MySQL
-   /opt/lampp/bin/mysql -u wordpress -p'*HYdWp@IO5hC' ivaconsulta < backup.sql
+   /opt/lampp/bin/mysql -u wordpress -p'<REDACTED_DB_PASSWORD>' ivaconsulta < backup.sql
    ```
 
    Or via phpMyAdmin:
@@ -623,20 +623,20 @@ Check debug logs at: `wp-content/debug.log`
 
 ```bash
 # Create backup
-/Applications/MAMP/Library/bin/mysqldump -u wordpress -p'*HYdWp@IO5hC' ivaconsulta > backup_$(date +%Y%m%d).sql
+/Applications/MAMP/Library/bin/mysqldump -u wordpress -p'<REDACTED_DB_PASSWORD>' ivaconsulta > backup_$(date +%Y%m%d).sql
 
 # Restore backup
-/Applications/MAMP/Library/bin/mysql -u wordpress -p'*HYdWp@IO5hC' ivaconsulta < backup_file.sql
+/Applications/MAMP/Library/bin/mysql -u wordpress -p'<REDACTED_DB_PASSWORD>' ivaconsulta < backup_file.sql
 ```
 
 **XAMPP (Linux) - Backup Before Changes**:
 
 ```bash
 # Create backup
-/opt/lampp/bin/mysqldump -u wordpress -p'*HYdWp@IO5hC' ivaconsulta > backup_$(date +%Y%m%d).sql
+/opt/lampp/bin/mysqldump -u wordpress -p'<REDACTED_DB_PASSWORD>' ivaconsulta > backup_$(date +%Y%m%d).sql
 
 # Restore backup
-/opt/lampp/bin/mysql -u wordpress -p'*HYdWp@IO5hC' ivaconsulta < backup_file.sql
+/opt/lampp/bin/mysql -u wordpress -p'<REDACTED_DB_PASSWORD>' ivaconsulta < backup_file.sql
 ```
 
 #### 4. Plugin Development
@@ -701,7 +701,7 @@ IvaConsulta-wp/
 - **Host**: `localhost:3307`
 - **Database**: `ivaconsulta`
 - **Username**: `wordpress`
-- **Password**: `*HYdWp@IO5hC`
+- **Password**: `<REDACTED_DB_PASSWORD>`
 - **Table Prefix**: `base001_`
 
 **XAMPP (Linux)**:
@@ -709,7 +709,7 @@ IvaConsulta-wp/
 - **Host**: `localhost:3306` or `localhost` (default port)
 - **Database**: `ivaconsulta`
 - **Username**: `wordpress`
-- **Password**: `*HYdWp@IO5hC`
+- **Password**: `<REDACTED_DB_PASSWORD>`
 - **Table Prefix**: `base001_`
 
 **Note**: Update `wp-config.php` with the correct port for your environment.
@@ -745,14 +745,14 @@ FROM base001_users;
 
 1. Start MAMP
 2. Go to: `http://localhost/phpMyAdmin` (or `http://localhost:8888/phpMyAdmin`)
-3. Login with: `wordpress` / `*HYdWp@IO5hC`
+3. Login with: `wordpress` / `<REDACTED_DB_PASSWORD>`
 4. Select database: `ivaconsulta`
 
 **XAMPP (Linux)**:
 
 1. Start XAMPP: `sudo /opt/lampp/lampp start`
 2. Go to: `http://localhost/phpMyAdmin`
-3. Login with: `wordpress` / `*HYdWp@IO5hC`
+3. Login with: `wordpress` / `<REDACTED_DB_PASSWORD>`
 4. Select database: `ivaconsulta`
 
 **Via Command Line**:
@@ -760,13 +760,13 @@ FROM base001_users;
 **MAMP (macOS)**:
 
 ```bash
-/Applications/MAMP/Library/bin/mysql -u wordpress -p'*HYdWp@IO5hC' ivaconsulta
+/Applications/MAMP/Library/bin/mysql -u wordpress -p'<REDACTED_DB_PASSWORD>' ivaconsulta
 ```
 
 **XAMPP (Linux)**:
 
 ```bash
-/opt/lampp/bin/mysql -u wordpress -p'*HYdWp@IO5hC' ivaconsulta
+/opt/lampp/bin/mysql -u wordpress -p'<REDACTED_DB_PASSWORD>' ivaconsulta
 ```
 
 ---
@@ -833,7 +833,7 @@ sudo ss -tulpn | grep :80
 
 ```bash
 # Test MySQL connection
-/Applications/MAMP/Library/bin/mysql -u wordpress -p'*HYdWp@IO5hC' -h localhost -P 3307
+/Applications/MAMP/Library/bin/mysql -u wordpress -p'<REDACTED_DB_PASSWORD>' -h localhost -P 3307
 ```
 
 **XAMPP (Linux) - Check**:
@@ -847,7 +847,7 @@ sudo ss -tulpn | grep :80
 
 ```bash
 # Test MySQL connection (default port 3306)
-/opt/lampp/bin/mysql -u wordpress -p'*HYdWp@IO5hC' -h localhost -P 3306
+/opt/lampp/bin/mysql -u wordpress -p'<REDACTED_DB_PASSWORD>' -h localhost -P 3306
 
 # Check MySQL error log
 sudo tail -f /opt/lampp/logs/mysql_error.log
@@ -1024,13 +1024,13 @@ sudo /opt/lampp/lampp start
 **MAMP (macOS)**:
 
 ```bash
-/Applications/MAMP/Library/bin/mysqldump -u wordpress -p'*HYdWp@IO5hC' ivaconsulta > backup.sql
+/Applications/MAMP/Library/bin/mysqldump -u wordpress -p'<REDACTED_DB_PASSWORD>' ivaconsulta > backup.sql
 ```
 
 **XAMPP (Linux)**:
 
 ```bash
-/opt/lampp/bin/mysqldump -u wordpress -p'*HYdWp@IO5hC' ivaconsulta > backup.sql
+/opt/lampp/bin/mysqldump -u wordpress -p'<REDACTED_DB_PASSWORD>' ivaconsulta > backup.sql
 ```
 
 ### Check Active Plugins
