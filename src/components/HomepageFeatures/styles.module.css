@@ -12,6 +12,7 @@
 
 .featureLink {
   color: inherit;
-  text-decoration: bold;
+  text-decoration: none;
+  font-weight: bold;
   margin-right: 1rem;
 }

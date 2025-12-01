@@ -1,10 +1,26 @@
 import { themes as prismThemes } from "prism-react-renderer";
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
+import * as dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config();
+
+// Log Auth0 config (will show in build output, not in browser)
+console.log("Auth0 Config:", {
+  domain: process.env.AUTH0_DOMAIN,
+  clientId: process.env.AUTH0_CLIENT_ID
+    ? "***" + process.env.AUTH0_CLIENT_ID.slice(-4)
+    : "missing",
+});
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
+  customFields: {
+    AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
+    AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
+  },
   title: "My Site",
   tagline: "Dinosaurs are cool",
   favicon: "img/favicon-ivaconsulta.png",
@@ -126,17 +142,16 @@ const config: Config = {
           position: "left",
         },
         {
+          type: "custom-navbarAuth",
+          position: "right",
+        },
+        {
           type: "docSidebar",
           sidebarId: "tutorialSidebar",
           position: "right",
           label: "Tutorial",
         },
         { to: "/blog", label: "Blog", position: "right" },
-        {
-          href: "https://github.com/facebook/docusaurus",
-          label: "GitHub",
-          position: "right",
-        },
       ],
     },
     footer: {
