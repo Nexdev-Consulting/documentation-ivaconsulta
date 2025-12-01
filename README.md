@@ -49,6 +49,28 @@ Add new markdown files under those folders; routes follow the folder name (e.g. 
 - Example body lives at `.github/pull_request_description.md` for quick copy/paste.
 - Run `npm run build` before opening a PR to catch broken links.
 
+## Authentication
+
+The site uses Auth0 for authentication. **All pages require authentication** - users must sign in before accessing any content (homepage, docs, blog, etc.).
+
+### Local development
+
+1. Copy `.env.example` to `.env`
+2. Add your Auth0 credentials:
+   ```
+   AUTH0_DOMAIN=your-tenant.auth0.com
+   AUTH0_CLIENT_ID=your_client_id
+   ```
+3. Restart the dev server: `npm run start`
+
+### Netlify deployment
+
+Set these environment variables in Netlify (Site settings → Build & deploy → Environment):
+- `AUTH0_DOMAIN`
+- `AUTH0_CLIENT_ID`
+
+The Auth0 extension for Netlify should populate these automatically.
+
 ## Deployment notes
 
 The site is static; any host that serves the `build/` directory works (GitHub Pages, Netlify, Vercel, etc.).  

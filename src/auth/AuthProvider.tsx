@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Auth0Client } from "@auth0/auth0-spa-js";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import { useHistory } from "@docusaurus/router";
 
 type AuthContextValue = {
   isLoading: boolean;
@@ -14,6 +15,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { siteConfig } = useDocusaurusContext();
+  const history = useHistory();
   const [auth0, setAuth0] = useState<Auth0Client | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -49,8 +51,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setAuth0(client);
 
       if (window.location.pathname === "/auth/callback") {
-        await client.handleRedirectCallback();
-        window.history.replaceState({}, "", "/");
+        try {
+          await client.handleRedirectCallback();
+          const isLoggedIn = await client.isAuthenticated();
+          setIsAuthenticated(isLoggedIn);
+          if (isLoggedIn) setUser(await client.getUser());
+          setIsLoading(false);
+          // Use Docusaurus router to navigate
+          history.push("/");
+          return;
+        } catch (error) {
+          console.error("Error handling redirect callback:", error);
+          setIsLoading(false);
+          return;
+        }
       }
 
       const isLoggedIn = await client.isAuthenticated();
@@ -58,7 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (isLoggedIn) setUser(await client.getUser());
       setIsLoading(false);
     })();
-  }, [siteConfig.customFields]);
+  }, [siteConfig.customFields, history]);
 
   const login = async () => auth0?.loginWithRedirect();
   const logout = () =>

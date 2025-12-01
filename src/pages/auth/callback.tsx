@@ -1,12 +1,15 @@
 import React from "react";
-import Layout from "@theme/Layout";
 
 export default function AuthCallback() {
   return (
-    <Layout title="Authentication">
-      <div style={{ textAlign: "center", marginTop: "4rem" }}>
-        <p>Finishing sign-in…</p>
-      </div>
-    </Layout>
+    <div style={{ 
+      display: "flex", 
+      justifyContent: "center", 
+      alignItems: "center", 
+      minHeight: "100vh",
+      fontSize: "1.2rem"
+    }}>
+      <p>Finishing sign-in…</p>
+    </div>
   );
 }

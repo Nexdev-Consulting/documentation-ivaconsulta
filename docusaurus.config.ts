@@ -142,17 +142,16 @@ const config: Config = {
           position: "left",
         },
         {
+          type: "custom-navbarAuth",
+          position: "right",
+        },
+        {
           type: "docSidebar",
           sidebarId: "tutorialSidebar",
           position: "right",
           label: "Tutorial",
         },
         { to: "/blog", label: "Blog", position: "right" },
-        {
-          href: "https://github.com/facebook/docusaurus",
-          label: "GitHub",
-          position: "right",
-        },
       ],
     },
     footer: {
