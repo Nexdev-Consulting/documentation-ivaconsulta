@@ -51,17 +51,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setAuth0(client);
 
       if (window.location.pathname === "/auth/callback") {
+        console.log("Processing callback at:", window.location.href);
         try {
-          await client.handleRedirectCallback();
+          console.log("Calling handleRedirectCallback...");
+          const result = await client.handleRedirectCallback();
+          console.log("Callback handled successfully:", result);
+
           const isLoggedIn = await client.isAuthenticated();
+          console.log("Is authenticated:", isLoggedIn);
+
           setIsAuthenticated(isLoggedIn);
-          if (isLoggedIn) setUser(await client.getUser());
+          if (isLoggedIn) {
+            const userData = await client.getUser();
+            console.log("User data:", userData);
+            setUser(userData);
+          }
           setIsLoading(false);
+
+          console.log("Navigating to home...");
           // Use Docusaurus router to navigate
           history.push("/");
           return;
         } catch (error) {
           console.error("Error handling redirect callback:", error);
+          console.error("Error details:", {
+            message: error.message,
+            stack: error.stack,
+            name: error.name,
+          });
           setIsLoading(false);
           return;
         }
