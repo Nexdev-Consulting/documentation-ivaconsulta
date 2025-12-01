@@ -60,10 +60,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         clientId,
         authorizationParams: {
           redirect_uri: window.location.origin + "/auth/callback",
+          scope: "openid profile email offline_access", // offline_access needed for refresh tokens
         },
         cacheLocation: "localstorage", // Ensure tokens persist across page reloads
         useRefreshTokens: true, // Enable refresh tokens for better session management
       });
+
+      console.log("Auth0 client configured with:", {
+        domain,
+        redirectUri: window.location.origin + "/auth/callback",
+        cacheLocation: "localstorage",
+        useRefreshTokens: true,
+      });
+
       setAuth0(client);
 
       // Check if we're returning from Auth0 (has code and state params)
@@ -78,11 +87,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const result = await client.handleRedirectCallback();
           console.log("Callback handled successfully:", result);
 
-          // Redirect immediately - tokens are now stored in localStorage
-          console.log("Redirecting to home...");
-          window.location.replace("/");
-          // Keep loading state true during redirect to prevent UI flicker
-          return;
+          // Verify tokens are stored before redirecting
+          console.log("Verifying authentication...");
+          const isLoggedIn = await client.isAuthenticated();
+          console.log("Is authenticated after callback:", isLoggedIn);
+
+          if (isLoggedIn) {
+            const userData = await client.getUser();
+            console.log(
+              "User authenticated:",
+              userData?.email || userData?.name
+            );
+
+            // Double-check localStorage has Auth0 data
+            const auth0Keys = Object.keys(localStorage).filter((key) =>
+              key.includes("auth0")
+            );
+            console.log("Auth0 keys in localStorage:", auth0Keys.length);
+
+            if (auth0Keys.length > 0) {
+              console.log("Tokens confirmed in localStorage, redirecting...");
+              window.location.replace("/");
+              return;
+            } else {
+              console.error(
+                "WARNING: Authenticated but no tokens in localStorage!"
+              );
+              // Try to force token storage
+              await client.getTokenSilently();
+              console.log("Forced token refresh, redirecting...");
+              window.location.replace("/");
+              return;
+            }
+          } else {
+            console.error("Callback processed but user not authenticated");
+            setIsLoading(false);
+            setIsProcessingCallback(false);
+            return;
+          }
         } catch (error) {
           console.error("Error handling redirect callback:", error);
           console.error("Error details:", {
