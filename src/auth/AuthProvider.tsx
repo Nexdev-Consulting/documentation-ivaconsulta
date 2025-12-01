@@ -99,14 +99,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Normal page load - check if user is authenticated
       // Skip this check if we're in the middle of processing a callback
       if (!isProcessingCallback) {
+        // Debug: Check localStorage directly
+        console.log("Checking localStorage for Auth0 data...");
+        const auth0Keys = Object.keys(localStorage).filter((key) =>
+          key.includes("auth0")
+        );
+        console.log("Auth0 localStorage keys:", auth0Keys);
+        auth0Keys.forEach((key) => {
+          console.log(`${key}:`, localStorage.getItem(key)?.substring(0, 100));
+        });
+
         const isLoggedIn = await client.isAuthenticated();
         console.log("Is logged in on normal page load:", isLoggedIn);
-        setIsAuthenticated(isLoggedIn);
-        if (isLoggedIn) {
+
+        // If not logged in, try to get token silently (refresh)
+        if (!isLoggedIn) {
+          try {
+            console.log("Attempting silent token refresh...");
+            await client.getTokenSilently();
+            const retryAuth = await client.isAuthenticated();
+            console.log("Is authenticated after silent refresh:", retryAuth);
+            setIsAuthenticated(retryAuth);
+            if (retryAuth) {
+              const userData = await client.getUser();
+              console.log("User data after refresh:", userData);
+              setUser(userData);
+            }
+          } catch (silentError) {
+            console.log(
+              "Silent auth failed (user may need to login):",
+              silentError.message
+            );
+            setIsAuthenticated(false);
+          }
+        } else {
+          setIsAuthenticated(true);
           const userData = await client.getUser();
           console.log("User data:", userData);
           setUser(userData);
         }
+
         setIsLoading(false);
       }
     })();
