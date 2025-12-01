@@ -19,11 +19,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<Record<string, unknown> | null>(null);
+  const [isProcessingCallback, setIsProcessingCallback] = useState(false);
 
   useEffect(() => {
     // Only run in browser
     if (!ExecutionEnvironment.canUseDOM) {
       return;
+    }
+
+    // Check if we're on the callback page first
+    const searchParams = new URLSearchParams(window.location.search);
+    const hasAuthParams = searchParams.has("code") && searchParams.has("state");
+    const isCallbackPage = window.location.pathname === "/auth/callback";
+
+    if (hasAuthParams && isCallbackPage) {
+      setIsProcessingCallback(true);
     }
 
     (async () => {
@@ -68,25 +78,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const result = await client.handleRedirectCallback();
           console.log("Callback handled successfully:", result);
 
-          // After handling callback, check authentication
-          const isLoggedIn = await client.isAuthenticated();
-          console.log("Is authenticated after callback:", isLoggedIn);
-
-          if (isLoggedIn) {
-            const userData = await client.getUser();
-            console.log("User data:", userData);
-            // Set state before redirecting
-            setIsAuthenticated(true);
-            setUser(userData);
-          }
-
-          setIsLoading(false);
-
-          // Redirect to home after a brief moment to ensure state is set
+          // Redirect immediately - tokens are now stored in localStorage
           console.log("Redirecting to home...");
-          setTimeout(() => {
-            window.location.replace("/");
-          }, 100);
+          window.location.replace("/");
+          // Keep loading state true during redirect to prevent UI flicker
           return;
         } catch (error) {
           console.error("Error handling redirect callback:", error);
@@ -96,20 +91,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             name: error.name,
           });
           setIsLoading(false);
+          setIsProcessingCallback(false);
           return;
         }
       }
 
       // Normal page load - check if user is authenticated
-      const isLoggedIn = await client.isAuthenticated();
-      console.log("Is logged in:", isLoggedIn);
-      setIsAuthenticated(isLoggedIn);
-      if (isLoggedIn) {
-        const userData = await client.getUser();
-        console.log("User data:", userData);
-        setUser(userData);
+      // Skip this check if we're in the middle of processing a callback
+      if (!isProcessingCallback) {
+        const isLoggedIn = await client.isAuthenticated();
+        console.log("Is logged in on normal page load:", isLoggedIn);
+        setIsAuthenticated(isLoggedIn);
+        if (isLoggedIn) {
+          const userData = await client.getUser();
+          console.log("User data:", userData);
+          setUser(userData);
+        }
+        setIsLoading(false);
       }
-      setIsLoading(false);
     })();
   }, [siteConfig.customFields]);
 
