@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Auth0Client } from "@auth0/auth0-spa-js";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import { useHistory } from "@docusaurus/router";
+import ExecutionEnvironment from "@docusaurus/ExecutionEnvironment";
 
 type AuthContextValue = {
   isLoading: boolean;
@@ -15,13 +15,17 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { siteConfig } = useDocusaurusContext();
-  const history = useHistory();
   const [auth0, setAuth0] = useState<Auth0Client | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<Record<string, unknown> | null>(null);
 
   useEffect(() => {
+    // Only run in browser
+    if (!ExecutionEnvironment.canUseDOM) {
+      return;
+    }
+
     (async () => {
       const domain = siteConfig.customFields?.AUTH0_DOMAIN as string;
       const clientId = siteConfig.customFields?.AUTH0_CLIENT_ID as string;
@@ -47,30 +51,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         authorizationParams: {
           redirect_uri: window.location.origin + "/auth/callback",
         },
+        cacheLocation: "localstorage", // Ensure tokens persist across page reloads
+        useRefreshTokens: true, // Enable refresh tokens for better session management
       });
       setAuth0(client);
 
-      if (window.location.pathname === "/auth/callback") {
+      // Check if we're returning from Auth0 (has code and state params)
+      const searchParams = new URLSearchParams(window.location.search);
+      const hasAuthParams =
+        searchParams.has("code") && searchParams.has("state");
+
+      if (hasAuthParams && window.location.pathname === "/auth/callback") {
         console.log("Processing callback at:", window.location.href);
         try {
           console.log("Calling handleRedirectCallback...");
           const result = await client.handleRedirectCallback();
           console.log("Callback handled successfully:", result);
 
+          // After handling callback, check authentication
           const isLoggedIn = await client.isAuthenticated();
-          console.log("Is authenticated:", isLoggedIn);
+          console.log("Is authenticated after callback:", isLoggedIn);
 
-          setIsAuthenticated(isLoggedIn);
           if (isLoggedIn) {
             const userData = await client.getUser();
             console.log("User data:", userData);
+            // Set state before redirecting
+            setIsAuthenticated(true);
             setUser(userData);
           }
+
           setIsLoading(false);
 
-          console.log("Navigating to home...");
-          // Use Docusaurus router to navigate
-          history.push("/");
+          // Redirect to home after a brief moment to ensure state is set
+          console.log("Redirecting to home...");
+          setTimeout(() => {
+            window.location.replace("/");
+          }, 100);
           return;
         } catch (error) {
           console.error("Error handling redirect callback:", error);
@@ -84,12 +100,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
+      // Normal page load - check if user is authenticated
       const isLoggedIn = await client.isAuthenticated();
+      console.log("Is logged in:", isLoggedIn);
       setIsAuthenticated(isLoggedIn);
-      if (isLoggedIn) setUser(await client.getUser());
+      if (isLoggedIn) {
+        const userData = await client.getUser();
+        console.log("User data:", userData);
+        setUser(userData);
+      }
       setIsLoading(false);
     })();
-  }, [siteConfig.customFields, history]);
+  }, [siteConfig.customFields]);
 
   const login = async () => auth0?.loginWithRedirect();
   const logout = () =>
