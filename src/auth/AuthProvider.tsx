@@ -27,10 +27,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Check if we're on the callback page first
     const searchParams = new URLSearchParams(window.location.search);
     const hasAuthParams = searchParams.has("code") && searchParams.has("state");
-    const isCallbackPage = window.location.pathname === "/auth/callback";
+    const pathname = window.location.pathname.replace(/\/+$/, "");
+    const isCallbackPage = pathname === "/auth/callback";
+
+    console.log("Auth0 init:", {
+      pathname: window.location.pathname,
+      normalizedPathname: pathname,
+      hasAuthParams,
+      isCallbackPage,
+    });
 
     if (hasAuthParams && isCallbackPage) {
       setIsProcessingCallback(true);
@@ -76,12 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setAuth0(client);
 
-      // Check if we're returning from Auth0 (has code and state params)
-      const searchParams = new URLSearchParams(window.location.search);
-      const hasAuthParams =
-        searchParams.has("code") && searchParams.has("state");
-
-      if (hasAuthParams && window.location.pathname === "/auth/callback") {
+      if (hasAuthParams && isCallbackPage) {
         console.log("🔵 CALLBACK DETECTED");
         console.log("Current URL:", window.location.href);
         console.log("Origin:", window.location.origin);
