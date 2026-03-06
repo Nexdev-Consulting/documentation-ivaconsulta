@@ -1,3 +1,7 @@
+---
+slug: /docs/Local_Setup_Guide
+---
+
 # Local Setup Guide
 
 A comprehensive guide for developing, building, and running the IvaConsulta WordPress project locally.

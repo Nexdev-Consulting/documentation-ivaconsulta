@@ -1,3 +1,7 @@
+---
+slug: /intro
+---
+
 # VAT Deep RAG Agent
 
 A CrewAI-powered agent that provides expert VAT and indirect taxation consultation using RAG (Retrieval Augmented Generation) with processed VAT documentation. Deployed on Railway, it serves as the AI backend called by the Orchestrator Agent and can also be accessed directly via HTTPS.

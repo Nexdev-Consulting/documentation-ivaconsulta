@@ -1,3 +1,7 @@
+---
+slug: /docs/VAT_Deep_Chatbot
+---
+
 # VAT Deep Chatbot and IP Limitation
 
 The VAT Deep chatbot is the on-site chatbot (powered by AI Engine) that answers IVA/VAT-related questions. Its answers are **not** the default AI Engine/OpenAI response — they are replaced by the response from an external RAG/orchestrator API (e.g. `vatdeep-orchestrator.up.railway.app`). The same integration enforces IP-based rate limiting: the WordPress side sends the visitor's IP to an Express + Redis service that decides whether the chatbot is allowed for that IP and records successful calls.

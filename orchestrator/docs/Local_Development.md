@@ -1,3 +1,7 @@
+---
+slug: /docs/Local_Development
+---
+
 # Local Development
 
 Guide for setting up and running the Orchestrator Agent locally for development and testing.

@@ -1,3 +1,7 @@
+---
+slug: /docs/Railway_Deployment_Guide
+---
+
 # Railway Deployment Guide
 
 The orchestrator is **primarily deployed on Railway** and connects to the RAG Agent also deployed on Railway. This guide covers the full Railway deployment setup.

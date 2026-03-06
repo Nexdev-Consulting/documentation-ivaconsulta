@@ -1,3 +1,7 @@
+---
+slug: /docs/Architecture
+---
+
 # Architecture
 
 The VAT Deep RAG Agent is a multi-component system built on Flask, CrewAI, and ChromaDB. This document covers the system architecture, request flow, background initialization, and agent configuration.

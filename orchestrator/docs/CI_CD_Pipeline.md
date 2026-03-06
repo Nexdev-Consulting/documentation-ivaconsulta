@@ -1,3 +1,7 @@
+---
+slug: /docs/CI_CD_Pipeline
+---
+
 # CI/CD Pipeline
 
 The project features a modern, enterprise-grade CI/CD pipeline with multiple validation stages. Configuration lives in `.github/workflows/ci.yml`.

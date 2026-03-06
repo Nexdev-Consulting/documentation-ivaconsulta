@@ -1,3 +1,7 @@
+---
+slug: /intro
+---
+
 # Orchestrator Agent
 
 A Flask-based orchestrator service that provides a RESTful API for connecting any application to CrewAI RAG agents. Deployed on Railway and integrated with WordPress sites via AI Engine and Jotform ChatBot. Features comprehensive LangSmith observability, EU AI Act compliance, and seamless communication between frontend applications and AI services.

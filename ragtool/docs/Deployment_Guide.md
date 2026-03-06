@@ -1,3 +1,7 @@
+---
+slug: /docs/Deployment_Guide
+---
+
 # Deployment Guide
 
 The RAG Agent is primarily deployed on Railway. It can be called via HTTPS by the Orchestrator Agent or any external client.

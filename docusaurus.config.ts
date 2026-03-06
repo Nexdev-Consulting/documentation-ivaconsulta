@@ -111,6 +111,15 @@ const config: Config = {
         sidebarPath: "./ragtool/sidebars.ts",
       },
     ],
+    [
+      "@docusaurus/plugin-content-docs",
+      {
+        id: "railway",
+        path: "railway",
+        routeBasePath: "railway",
+        sidebarPath: "./railway/sidebars.ts",
+      },
+    ],
   ],
 
   themeConfig: {
@@ -139,6 +148,11 @@ const config: Config = {
         {
           to: "/ragtool/intro",
           label: "RagTool",
+          position: "left",
+        },
+        {
+          to: "/railway/intro",
+          label: "Railway",
           position: "left",
         },
         {

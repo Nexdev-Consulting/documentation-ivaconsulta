@@ -1,3 +1,7 @@
+---
+slug: /intro
+---
+
 # IvaConsulta WordPress Site
 
 A consolidated WordPress site created by merging two Joomla websites (main site + ecommerce) into a single installation. Focused on IVA/tax consultation and related services (EU VAT, Intrastat, B2B invoicing, etc.), with an integrated AI chatbot powered by an external RAG/orchestrator agent.

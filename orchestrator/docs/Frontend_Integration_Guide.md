@@ -1,3 +1,7 @@
+---
+slug: /docs/Frontend_Integration_Guide
+---
+
 # Frontend Integration Guide
 
 The Orchestrator provides a RESTful API that can be integrated with **any application** — web, mobile, desktop, or other services. This guide covers integration examples for common platforms and frameworks.

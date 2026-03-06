@@ -1,3 +1,7 @@
+---
+slug: /docs/Troubleshooting_and_Performance
+---
+
 # Troubleshooting and Performance
 
 Common issues, debugging techniques, health check interpretation, and performance optimization for the VAT Deep RAG Agent.
