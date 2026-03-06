@@ -27,10 +27,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Check if we're on the callback page first
     const searchParams = new URLSearchParams(window.location.search);
     const hasAuthParams = searchParams.has("code") && searchParams.has("state");
-    const isCallbackPage = window.location.pathname === "/auth/callback";
+    const pathname = window.location.pathname.replace(/\/+$/, "");
+    const isCallbackPage = pathname === "/auth/callback";
+
+    console.log("Auth0 init:", {
+      pathname: window.location.pathname,
+      normalizedPathname: pathname,
+      hasAuthParams,
+      isCallbackPage,
+    });
 
     if (hasAuthParams && isCallbackPage) {
       setIsProcessingCallback(true);
@@ -60,10 +67,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         clientId,
         authorizationParams: {
           redirect_uri: window.location.origin + "/auth/callback",
-          scope: "openid profile email offline_access", // offline_access needed for refresh tokens
+          scope: "openid profile email offline_access",
         },
-        cacheLocation: "localstorage", // Ensure tokens persist across page reloads
-        useRefreshTokens: true, // Enable refresh tokens for better session management
+        cacheLocation: "localstorage",
+        useRefreshTokens: true,
+        useRefreshTokensFallback: true,
       });
 
       console.log("Auth0 client configured with:", {
@@ -75,12 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setAuth0(client);
 
-      // Check if we're returning from Auth0 (has code and state params)
-      const searchParams = new URLSearchParams(window.location.search);
-      const hasAuthParams =
-        searchParams.has("code") && searchParams.has("state");
-
-      if (hasAuthParams && window.location.pathname === "/auth/callback") {
+      if (hasAuthParams && isCallbackPage) {
         console.log("🔵 CALLBACK DETECTED");
         console.log("Current URL:", window.location.href);
         console.log("Origin:", window.location.origin);
@@ -191,24 +194,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const isLoggedIn = await client.isAuthenticated();
         console.log("Is logged in on normal page load:", isLoggedIn);
 
-        // If not logged in, try to get token silently (refresh)
         if (!isLoggedIn) {
-          try {
-            console.log("Attempting silent token refresh...");
-            await client.getTokenSilently();
-            const retryAuth = await client.isAuthenticated();
-            console.log("Is authenticated after silent refresh:", retryAuth);
-            setIsAuthenticated(retryAuth);
-            if (retryAuth) {
-              const userData = await client.getUser();
-              console.log("User data after refresh:", userData);
-              setUser(userData);
+          const hasAuth0Data = Object.keys(localStorage).some((key) =>
+            key.startsWith("@@auth0spajs@@")
+          );
+
+          if (hasAuth0Data) {
+            try {
+              console.log("Found cached Auth0 data, attempting silent token refresh...");
+              await client.getTokenSilently();
+              const retryAuth = await client.isAuthenticated();
+              setIsAuthenticated(retryAuth);
+              if (retryAuth) {
+                const userData = await client.getUser();
+                setUser(userData);
+              }
+            } catch (silentError) {
+              console.log(
+                "Silent auth failed (user may need to login):",
+                silentError.message
+              );
+              setIsAuthenticated(false);
             }
-          } catch (silentError) {
-            console.log(
-              "Silent auth failed (user may need to login):",
-              silentError.message
-            );
+          } else {
+            console.log("No existing session found, user needs to log in.");
             setIsAuthenticated(false);
           }
         } else {
