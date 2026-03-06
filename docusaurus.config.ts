@@ -90,7 +90,7 @@ const config: Config = {
         id: "wordpress",
         path: "wordpress-site",
         routeBasePath: "wordpress-site",
-        sidebarPath: false,
+        sidebarPath: "./wordpress-site/sidebars.ts",
       },
     ],
     [
@@ -99,7 +99,7 @@ const config: Config = {
         id: "orchestrator",
         path: "orchestrator",
         routeBasePath: "orchestrator",
-        sidebarPath: false,
+        sidebarPath: "./orchestrator/sidebars.ts",
       },
     ],
     [
@@ -108,7 +108,16 @@ const config: Config = {
         id: "ragtool",
         path: "ragtool",
         routeBasePath: "ragtool",
-        sidebarPath: false,
+        sidebarPath: "./ragtool/sidebars.ts",
+      },
+    ],
+    [
+      "@docusaurus/plugin-content-docs",
+      {
+        id: "railway",
+        path: "railway",
+        routeBasePath: "railway",
+        sidebarPath: "./railway/sidebars.ts",
       },
     ],
   ],
@@ -139,6 +148,11 @@ const config: Config = {
         {
           to: "/ragtool/intro",
           label: "RagTool",
+          position: "left",
+        },
+        {
+          to: "/railway/intro",
+          label: "Railway",
           position: "left",
         },
         {
