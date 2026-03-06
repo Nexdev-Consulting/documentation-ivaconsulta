@@ -60,10 +60,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         clientId,
         authorizationParams: {
           redirect_uri: window.location.origin + "/auth/callback",
-          scope: "openid profile email offline_access", // offline_access needed for refresh tokens
+          scope: "openid profile email offline_access",
         },
-        cacheLocation: "localstorage", // Ensure tokens persist across page reloads
-        useRefreshTokens: true, // Enable refresh tokens for better session management
+        cacheLocation: "localstorage",
+        useRefreshTokens: true,
+        useRefreshTokensFallback: true,
       });
 
       console.log("Auth0 client configured with:", {
@@ -191,24 +192,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const isLoggedIn = await client.isAuthenticated();
         console.log("Is logged in on normal page load:", isLoggedIn);
 
-        // If not logged in, try to get token silently (refresh)
         if (!isLoggedIn) {
-          try {
-            console.log("Attempting silent token refresh...");
-            await client.getTokenSilently();
-            const retryAuth = await client.isAuthenticated();
-            console.log("Is authenticated after silent refresh:", retryAuth);
-            setIsAuthenticated(retryAuth);
-            if (retryAuth) {
-              const userData = await client.getUser();
-              console.log("User data after refresh:", userData);
-              setUser(userData);
+          const hasAuth0Data = Object.keys(localStorage).some((key) =>
+            key.startsWith("@@auth0spajs@@")
+          );
+
+          if (hasAuth0Data) {
+            try {
+              console.log("Found cached Auth0 data, attempting silent token refresh...");
+              await client.getTokenSilently();
+              const retryAuth = await client.isAuthenticated();
+              setIsAuthenticated(retryAuth);
+              if (retryAuth) {
+                const userData = await client.getUser();
+                setUser(userData);
+              }
+            } catch (silentError) {
+              console.log(
+                "Silent auth failed (user may need to login):",
+                silentError.message
+              );
+              setIsAuthenticated(false);
             }
-          } catch (silentError) {
-            console.log(
-              "Silent auth failed (user may need to login):",
-              silentError.message
-            );
+          } else {
+            console.log("No existing session found, user needs to log in.");
             setIsAuthenticated(false);
           }
         } else {
