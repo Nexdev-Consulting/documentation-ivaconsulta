@@ -9,6 +9,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'docs/API_Integration_Guide',
         'docs/Frontend_Integration_Guide',
+        'docs/IP_Rate_Limiting',
       ],
     },
     {

@@ -9,6 +9,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'docs/Local_Setup_Guide',
         'docs/VAT_Deep_Chatbot',
+        'docs/IP_Rate_Limiting',
       ],
     },
   ],
