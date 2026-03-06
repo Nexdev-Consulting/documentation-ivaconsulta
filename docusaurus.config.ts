@@ -99,7 +99,7 @@ const config: Config = {
         id: "orchestrator",
         path: "orchestrator",
         routeBasePath: "orchestrator",
-        sidebarPath: false,
+        sidebarPath: "./orchestrator/sidebars.ts",
       },
     ],
     [
@@ -108,7 +108,7 @@ const config: Config = {
         id: "ragtool",
         path: "ragtool",
         routeBasePath: "ragtool",
-        sidebarPath: false,
+        sidebarPath: "./ragtool/sidebars.ts",
       },
     ],
   ],
