@@ -90,7 +90,7 @@ const config: Config = {
         id: "wordpress",
         path: "wordpress-site",
         routeBasePath: "wordpress-site",
-        sidebarPath: false,
+        sidebarPath: "./wordpress-site/sidebars.ts",
       },
     ],
     [
